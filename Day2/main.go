@@ -62,7 +62,6 @@ func main() {
 				}
 			}
 		}
-		//fmt.Printf("Meine Spiele: ", plays)
 	}
-	fmt.Printf("Mein Score: ", sum(score))
+	fmt.Print("Mein Score: ", sum(score))
 }
