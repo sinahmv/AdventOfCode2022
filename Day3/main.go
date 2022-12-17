@@ -14,6 +14,17 @@ func check(e error) {
 	}
 }
 
+func part2(string1 string, string2 string, string3 string) string {
+	var matchingString string
+	for i := 0; i < len(string1); i++ {
+		letter := string1[i : i+1]
+		if strings.Contains(string2, letter) && strings.Contains(string3, letter) {
+			matchingString = letter
+		}
+	}
+	return matchingString
+}
+
 func getSimilarString(substring1 string, substring2 string) string {
 	var matchingString string
 	for i := 0; i < len(substring1); i++ {
@@ -54,20 +65,19 @@ func main() {
 
 	for scanner.Scan() {
 
-		line := scanner.Text()
-		backpack := strings.Split(line, "/n")
+		input := strings.Split(scanner.Text(), "/n")
 
-		for i := 0; i < len(backpack); i++ {
-			currentBackpack := backpack[i]
-			department1 := currentBackpack[0 : len(currentBackpack)/2]
-			department2 := currentBackpack[len(currentBackpack)/2:]
-			//fmt.Print("String 1: ", department1, " String 2: ", department2)
+		for i := 0; i < len(input); i++ {
+			currentinput := input[i]
+			department1 := currentinput[0 : len(currentinput)/2]
+			department2 := currentinput[len(currentinput)/2:]
+			fmt.Print("String 1: ", department1, " String 2: ", department2, " ")
 			matchingString := getSimilarString(department1, department2)
-			//fmt.Print(" Match: ", matchingString, " ")
-			//fmt.Print(getPriority(matchingString), " ")
+			fmt.Print("Match: ", matchingString, " ")
+			fmt.Println("Priority: ", getPriority(matchingString), " ")
 			score = append(score, int(getPriority(matchingString)))
 		}
 
 	}
-	fmt.Print(sum(score))
+	fmt.Print("Score: ", sum(score))
 }
