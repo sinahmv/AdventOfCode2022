@@ -70,6 +70,7 @@ func main() {
 	for scanner.Scan() {
 
 		input := strings.Split(scanner.Text(), "/n")
+		//fmt.Print(input)
 
 		for i := 0; i < len(input); i++ {
 			rearrangements := strings.Split(input[i], " ")
