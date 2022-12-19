@@ -32,16 +32,14 @@ func main() {
 
 	f, _ := os.Open("/Users/sinah/Code/AdventOfCode2022/Day5/input.txt")
 	scanner := bufio.NewScanner(f)
-	rearrangements := make([]string, 0)
 	result := make([]string, 0)
 
 	for scanner.Scan() {
 
 		input := strings.Split(scanner.Text(), "/n")
-		rearrangements = append(rearrangements, input...)
+		
+		
 
 	}
-
-	fmt.Print(rearrangements)
-	fmt.Println(result)
+	fmt.Print(result)
 }
