@@ -47,7 +47,7 @@ func main() {
 			} else if int3 <= int1 && int4 >= int2 {
 				fmt.Println("Hurra2")
 				score++
-			} else if int2 >= int3 && int4 >= int1 {
+			} else if int2 >= int3 && int4 >= int1 { //Abfrage für Part2
 				fmt.Println("Hurra3")
 				score++
 			}
