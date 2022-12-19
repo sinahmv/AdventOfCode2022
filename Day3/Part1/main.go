@@ -58,7 +58,7 @@ func sum(array []int) int {
 }
 
 func main() {
-	f, err := os.Open("/Users/sinah/Code/AdventOfCode/Day3/input.txt")
+	f, err := os.Open("/Users/sinah/Code/AdventOfCode2022/Day3/input.txt")
 	check(err)
 	scanner := bufio.NewScanner(f)
 	score := make([]int, 0)

@@ -23,7 +23,7 @@ func sum(array []int) int {
 
 func main() {
 	score := make([]int, 0)
-	f, err := os.Open("/Users/sinah/Code/AdventOfCode/Day2/input.txt")
+	f, err := os.Open("/Users/sinah/Code/AdventOfCode2022/Day2/input.txt")
 	check(err)
 	scanner := bufio.NewScanner(f)
 

@@ -18,7 +18,7 @@ func main() {
 
 	top3 := []int{0, 0, 0}
 	cals := 0
-	f, err := os.Open("/Users/sinah/Code/AdventOfCode/Day1/input")
+	f, err := os.Open("/Users/sinah/Code/AdventOfCode2022/Day1/input")
 	check(err)
 	scanner := bufio.NewScanner(f)
 
