@@ -13,8 +13,32 @@ type ship struct {
 	resources []string
 }
 
-func moveItems(ship []ship, amount int, startship int, endship int) []ship {
+func removeResourceFromStack(currentShip []ship, amount int, startStackID int) []string {
+	stack := currentShip[startStackID-1].resources
+	movingResources := make([]string, 0)
+	for i := len(stack)-1; i >= amount; i-- {
+		movingResources = append(movingResources, stack[i])
+		if len(stack) > 0 {
+			stack = stack[0:len(stack)-1]
+		} else {
+			continue
+		}
+	}
+	currentShip[startStackID-1].resources = stack
+	return movingResources
+}
 
+func addResourcesToStack(currentShip []ship, endStackID int, movingResources []string) []ship {
+	stack := currentShip[endStackID-1].resources 
+	stack = append(stack, movingResources...)
+	currentShip[endStackID-1].resources = stack
+	return currentShip
+}
+
+func moveItems(currentShip []ship, amount int, startStackID int, endStackID int) []ship {
+	movingResources := removeResourceFromStack(currentShip, amount, startStackID)
+	currentShip = addResourcesToStack(currentShip, endStackID, movingResources)
+	return currentShip
 }
 
 func getResult(currentShip []ship) []string {
@@ -50,9 +74,9 @@ func main() {
 		for i := 0; i < len(input); i++ {
 			rearrangements := strings.Split(input[i], " ")
 			amount, _ := strconv.Atoi(rearrangements[1])
-			startship, _ := strconv.Atoi(rearrangements[3])
-			endship, _ := strconv.Atoi(rearrangements[5])
-			moveItems(currentShip, amount, startship, endship)
+			startStackID, _ := strconv.Atoi(rearrangements[3])
+			endStackID, _ := strconv.Atoi(rearrangements[5])
+			moveItems(currentShip, amount, startStackID, endStackID)
 		}
 
 	}
