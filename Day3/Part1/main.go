@@ -67,16 +67,14 @@ func main() {
 
 		input := strings.Split(scanner.Text(), "/n")
 
-		for i := 0; i < len(input); i++ {
-			currentinput := input[i]
-			department1 := currentinput[0 : len(currentinput)/2]
-			department2 := currentinput[len(currentinput)/2:]
-			fmt.Print("String 1: ", department1, " String 2: ", department2, " ")
-			matchingString := getSimilarString(department1, department2)
-			fmt.Print("Match: ", matchingString, " ")
-			fmt.Println("Priority: ", getPriority(matchingString), " ")
-			score = append(score, int(getPriority(matchingString)))
-		}
+		currentinput := input[0]
+		department1 := currentinput[0 : len(currentinput)/2]
+		department2 := currentinput[len(currentinput)/2:]
+		fmt.Print("String 1: ", department1, " String 2: ", department2, " ")
+		matchingString := getSimilarString(department1, department2)
+		fmt.Print("Match: ", matchingString, " ")
+		fmt.Println("Priority: ", getPriority(matchingString), " ")
+		score = append(score, int(getPriority(matchingString)))
 
 	}
 	fmt.Print("Score: ", sum(score))
