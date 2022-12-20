@@ -4,82 +4,84 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 	"strconv"
+	"strings"
 )
 
-type ship struct {
-	id  int
+type stack struct {
+	id        int
 	resources []string
 }
 
-func removeResourceFromStack(currentShip []ship, amount int, startStackID int) []string {
-	stack := currentShip[startStackID-1].resources
-	movingResources := make([]string, 0)
-	for i := len(stack)-1; i >= amount; i-- {
-		movingResources = append(movingResources, stack[i])
-		if len(stack) > 0 {
-			stack = stack[0:len(stack)-1]
-		} else {
-			continue
-		}
+func getMyInput(fileName string) []string {
+	var input []string
+	f, _ := os.Open(fileName)
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		input = append(input, scanner.Text())
 	}
-	currentShip[startStackID-1].resources = stack
-	return movingResources
+	return input
 }
 
-func addResourcesToStack(currentShip []ship, endStackID int, movingResources []string) []ship {
-	stack := currentShip[endStackID-1].resources 
-	stack = append(stack, movingResources...)
-	currentShip[endStackID-1].resources = stack
-	return currentShip
+func getUpperResource(currentStack stack) (string, stack) {
+	resource := currentStack.resources[len(currentStack.resources)-1]
+	stackContent := currentStack.resources[:len(currentStack.resources)-1]
+	return resource, stack{
+		id:        currentStack.id,
+		resources: stackContent,
+	}
 }
 
-func moveItems(currentShip []ship, amount int, startStackID int, endStackID int) []ship {
-	movingResources := removeResourceFromStack(currentShip, amount, startStackID)
-	currentShip = addResourcesToStack(currentShip, endStackID, movingResources)
-	return currentShip
+func addResourceToStack(currentstack stack, movingResource string) stack {
+	var content []string = currentstack.resources
+	content = append(content, movingResource)
+	currentstack.resources = content
+	return currentstack
 }
 
-func getResult(currentShip []ship) []string {
-	result := make([]string, 0)
-	upperResource := ""
-	for i := 0; i < len(currentShip); i++ {
-		upperResource = currentShip[i].resources[len(currentShip[i].resources)-1]
-		result = append(result, upperResource)
+func moveItems(currentstack []stack, amount int, startStackID int, endStackID int) []stack {
+	for i := 0; i < amount; i++ {
+		resource, newStack := getUpperResource(currentstack[startStackID-1])
+		currentstack[startStackID-1] = newStack
+
+		newStackAdded := addResourceToStack(currentstack[endStackID-1], resource)
+		currentstack[endStackID-1] = newStackAdded
+	}
+	return currentstack
+}
+
+func getResult(currentstack []stack) string {
+	result := ""
+	for i := 0; i < len(currentstack); i++ {
+		upperResource := currentstack[i].resources[len(currentstack[i].resources)-1]
+		result += upperResource
 	}
 	return result
 }
 
 func main() {
-
-	f, _ := os.Open("/Users/sinah/Code/AdventOfCode2022/Day5/input.txt")
-	scanner := bufio.NewScanner(f)
-	var currentShip []ship = []ship{
-		{id: 1, resources: []string{"T", "R", "G", "W", "Q", "M", "F", "P"}},
-		{id: 2, resources: []string{"R", "F", "H"}},
-		{id: 3, resources: []string{"D", "S", "H", "G", "V", "R", "Z", "P"}},
-		{id: 4, resources: []string{"G", "W", "F", "B", "P", "H", "Q"}},
-		{id: 5, resources: []string{"H", "J", "M", "S", "P"}},
-		{id: 6, resources: []string{"L", "P", "R", "S", "H", "T", "Z", "M"}},
-		{id: 7, resources: []string{"L", "M", "N", "H", "T", "P"}},
-		{id: 8, resources: []string{"R", "Q", "D", "F"}},
-		{id: 9, resources: []string{"H", "P", "L", "N", "C", "S", "D"}},
+	var currentStacks []stack = []stack{
+		{id: 1, resources: []string{"P", "F", "M", "Q", "W", "G", "R", "T"}},
+		{id: 2, resources: []string{"H", "F", "R"}},
+		{id: 3, resources: []string{"P", "Z", "R", "V", "G", "H", "S", "D"}},
+		{id: 4, resources: []string{"Q", "H", "P", "B", "F", "W", "G"}},
+		{id: 5, resources: []string{"P", "S", "M", "J", "H"}},
+		{id: 6, resources: []string{"M", "Z", "T", "H", "S", "R", "P", "L"}},
+		{id: 7, resources: []string{"P", "T", "H", "N", "M", "L"}},
+		{id: 8, resources: []string{"F", "D", "Q", "R"}},
+		{id: 9, resources: []string{"D", "S", "C", "N", "L", "P", "H"}},
 	}
+	var input = getMyInput("/Users/sinah/Code/AdventOfCode2022/Day5/input.txt")
 
-	for scanner.Scan() {
-
-		input := strings.Split(scanner.Text(), "/n")
-		//fmt.Print(input)
+	for i := 0; i < len(input); i++ {
 
 		for i := 0; i < len(input); i++ {
 			rearrangements := strings.Split(input[i], " ")
 			amount, _ := strconv.Atoi(rearrangements[1])
 			startStackID, _ := strconv.Atoi(rearrangements[3])
 			endStackID, _ := strconv.Atoi(rearrangements[5])
-			moveItems(currentShip, amount, startStackID, endStackID)
+			currentStacks = moveItems(currentStacks, amount, startStackID, endStackID)
 		}
-
 	}
-	fmt.Print(getResult(currentShip))
+	fmt.Print(getResult(currentStacks))
 }
