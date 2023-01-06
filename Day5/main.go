@@ -25,7 +25,7 @@ func getMyInput(fileName string) []string {
 
 func getUpperResource(currentStack stack) (string, stack) {
 	resource := currentStack.resources[len(currentStack.resources)-1]
-	stackContent := currentStack.resources[:len(currentStack.resources) - 1]
+	stackContent := currentStack.resources[:len(currentStack.resources)-1]
 	return resource, stack{
 		id:        currentStack.id,
 		resources: stackContent,
@@ -45,6 +45,22 @@ func moveItems(currentstack []stack, amount int, startStackID int, endStackID in
 		currentstack[startStackID-1] = newStack
 
 		newStackAdded := addResourceToStack(currentstack[endStackID-1], resource)
+		currentstack[endStackID-1] = newStackAdded
+	}
+	return currentstack
+}
+
+func moveItemsPart2(currentstack []stack, amount int, startStackID int, endStackID int) []stack {
+	stackToBeAppended := make([]string, 0)
+
+	for i := 0; i < amount; i++ {
+		resource, newStack := getUpperResource(currentstack[startStackID-1])
+		currentstack[startStackID-1] = newStack
+		stackToBeAppended = append(stackToBeAppended, resource)
+	}
+
+	for i := 0; i < len(stackToBeAppended); i++ {
+		newStackAdded := addResourceToStack(currentstack[endStackID-1], stackToBeAppended[len(stackToBeAppended)-1-i])
 		currentstack[endStackID-1] = newStackAdded
 	}
 	return currentstack
@@ -79,8 +95,8 @@ func main() {
 		amount, _ := strconv.Atoi(rearrangements[1])
 		startStackID, _ := strconv.Atoi(rearrangements[3])
 		endStackID, _ := strconv.Atoi(rearrangements[5])
-		currentStacks = moveItems(currentStacks, amount, startStackID, endStackID)
-		
+		currentStacks = moveItemsPart2(currentStacks, amount, startStackID, endStackID)
+
 	}
 	fmt.Print(getResult(currentStacks))
 }
