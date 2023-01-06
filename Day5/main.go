@@ -25,7 +25,7 @@ func getMyInput(fileName string) []string {
 
 func getUpperResource(currentStack stack) (string, stack) {
 	resource := currentStack.resources[len(currentStack.resources)-1]
-	stackContent := currentStack.resources[:len(currentStack.resources)-1]
+	stackContent := currentStack.resources[:len(currentStack.resources) - 1]
 	return resource, stack{
 		id:        currentStack.id,
 		resources: stackContent,
@@ -75,13 +75,12 @@ func main() {
 
 	for i := 0; i < len(input); i++ {
 
-		for i := 0; i < len(input); i++ {
-			rearrangements := strings.Split(input[i], " ")
-			amount, _ := strconv.Atoi(rearrangements[1])
-			startStackID, _ := strconv.Atoi(rearrangements[3])
-			endStackID, _ := strconv.Atoi(rearrangements[5])
-			currentStacks = moveItems(currentStacks, amount, startStackID, endStackID)
-		}
+		rearrangements := strings.Split(input[i], " ")
+		amount, _ := strconv.Atoi(rearrangements[1])
+		startStackID, _ := strconv.Atoi(rearrangements[3])
+		endStackID, _ := strconv.Atoi(rearrangements[5])
+		currentStacks = moveItems(currentStacks, amount, startStackID, endStackID)
+		
 	}
 	fmt.Print(getResult(currentStacks))
 }
