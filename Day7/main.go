@@ -8,6 +8,14 @@ import (
 	"strings"
 )
 
+type node struct {
+	name     string
+	size     int
+	isFile   bool
+	children map[string]*node
+	parent   *node
+}
+
 func getMyInput(fileName string) [][]string {
 	var input [][]string
 	f, _ := os.Open(fileName)
@@ -18,38 +26,61 @@ func getMyInput(fileName string) [][]string {
 	return input
 }
 
-func CalculateDirSize(DirName string, InputFile [][]string) int {
-	var DirSize int = 0
-	var ReachedCurrentDir bool = false
-	for _, line := range InputFile {
-		// End of dir ls is reached
-		if ReachedCurrentDir && line[1] == "cd" {
-			ReachedCurrentDir = false
-			if DirSize <= 100000 {
-				result += DirSize
-			}
-			return DirSize
-		}
-		// Add File size to dir size
-		if ReachedCurrentDir && line[0] != "dir" && line[0] != "ls" {
-			size, _ := strconv.Atoi(line[0])
-			DirSize += size
-		}
-		// Calculate subfolder size
-		if ReachedCurrentDir && line[0] == "dir" {
-			DirSize += CalculateDirSize(line[1], InputFile)
-		}
-		// Directory is reached
-		if line[0] == "$" && line[1] == "cd" && line[2] == DirName {
-			ReachedCurrentDir = true
-		}
+func calculateSize(root node) (size int) {
+	if root.isFile {
+		return root.size
 	}
-	return 1
+	for _, d := range root.children {
+		size += calculateSize(*d)
+	}
+	return
 }
 
-var result int = 0
+func parseInput(input [][]string, currentDirectory *node, directories []*node) {
+
+	for _, line := range input {
+
+		if len(line) > 2 {
+			//geht zum Eltern Directory
+			if line[2] == ".." {
+				currentDirectory = currentDirectory.parent
+				//geht zum initialen Directory
+			} else if line[2] == "/" {
+				currentDirectory = &node{"/", 0, false, make(map[string]*node), nil}
+			} else {
+				currentDirectory = currentDirectory.children[line[2]]
+			}
+
+		} else if line[0] == "dir" {
+			//es wird ein neues Directory hinzugefügt (können unter anderem die gleichen Namen haben, sind aber trotzdem neu)
+			currentDirectory.children[line[1]] = &node{line[1], 0, false, make(map[string]*node), currentDirectory}
+			directories = append(directories, currentDirectory.children[line[1]])
+
+		} else if line[0] != "$" {
+			//wenn die Zeile nicht mit einem $ beginnt, gibt sie die Größe eines Files wieder
+			size, _ := strconv.Atoi(line[0])
+			currentDirectory.children[line[1]] = &node{line[1], size, true, nil, currentDirectory}
+		}
+	}
+
+	var totalSize int
+
+	for _, directories := range directories {
+		size := calculateSize(*directories)
+		if size <= 100000 {
+			totalSize += size
+		}
+	}
+
+	fmt.Println(totalSize)
+}
 
 func main() {
 	var InputFile = getMyInput("/Users/sinah/Code/AdventOfCode2022/Day7/input.txt")
-	fmt.Print(InputFile)
+	//zeigt auf mein akutelles Directory
+	var currentDirectory *node
+	//Sammlung aller Directories an denen man vorbei geht
+	directories := []*node{}
+
+	parseInput(InputFile, currentDirectory, directories)
 }
