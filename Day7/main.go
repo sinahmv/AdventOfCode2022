@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type node struct {
+type directory struct {
 	name     string
 	size     int
 	isFile   bool
-	children map[string]*node
-	parent   *node
+	children map[string]*directory
+	parent   *directory
 }
 
 func getMyInput(fileName string) [][]string {
@@ -26,7 +26,7 @@ func getMyInput(fileName string) [][]string {
 	return input
 }
 
-func calculateSize(root node) (size int) {
+func calculateSize(root directory) (size int) {
 	if root.isFile {
 		return root.size
 	}
@@ -36,7 +36,7 @@ func calculateSize(root node) (size int) {
 	return
 }
 
-func parseInput(input [][]string, currentDirectory *node, directories []*node) {
+func parseInput(input [][]string, currentDirectory *directory, directories []*directory) {
 
 	for _, line := range input {
 
@@ -46,20 +46,20 @@ func parseInput(input [][]string, currentDirectory *node, directories []*node) {
 				currentDirectory = currentDirectory.parent
 				//geht zum initialen Directory
 			} else if line[2] == "/" {
-				currentDirectory = &node{"/", 0, false, make(map[string]*node), nil}
+				currentDirectory = &directory{"/", 0, false, make(map[string]*directory), nil}
 			} else {
 				currentDirectory = currentDirectory.children[line[2]]
 			}
 
 		} else if line[0] == "dir" {
 			//es wird ein neues Directory hinzugefügt (können unter anderem die gleichen Namen haben, sind aber trotzdem neu)
-			currentDirectory.children[line[1]] = &node{line[1], 0, false, make(map[string]*node), currentDirectory}
+			currentDirectory.children[line[1]] = &directory{line[1], 0, false, make(map[string]*directory), currentDirectory}
 			directories = append(directories, currentDirectory.children[line[1]])
 
 		} else if line[0] != "$" {
 			//wenn die Zeile nicht mit einem $ beginnt, gibt sie die Größe eines Files wieder
 			size, _ := strconv.Atoi(line[0])
-			currentDirectory.children[line[1]] = &node{line[1], size, true, nil, currentDirectory}
+			currentDirectory.children[line[1]] = &directory{line[1], size, true, nil, currentDirectory}
 		}
 	}
 
@@ -78,9 +78,9 @@ func parseInput(input [][]string, currentDirectory *node, directories []*node) {
 func main() {
 	var InputFile = getMyInput("/Users/sinah/Code/AdventOfCode2022/Day7/input.txt")
 	//zeigt auf mein akutelles Directory
-	var currentDirectory *node
+	var currentDirectory *directory
 	//Sammlung aller Directories an denen man vorbei geht
-	directories := []*node{}
+	directories := []*directory{}
 
 	parseInput(InputFile, currentDirectory, directories)
 }
