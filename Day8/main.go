@@ -21,6 +21,7 @@ func calculateVisibleTrees(trees []string) int {
 
 	//??????????
 	visibleTrees := map[string]struct{}{}
+	visibleTrees2 := (len(trees) * 2) + (len(trees[0]) * 2)
 
 	for row := 1; row < len(trees)-1; row++ {
 
@@ -30,6 +31,7 @@ func calculateVisibleTrees(trees []string) int {
 			currentTree, _ := strconv.Atoi(string(trees[row][col]))
 			if currentTree > tallestTree {
 				tallestTree = currentTree
+				visibleTrees2++
 				//??????????
 				visibleTrees[strconv.Itoa(row)+" "+strconv.Itoa(col)] = struct{}{}
 			}
@@ -41,6 +43,7 @@ func calculateVisibleTrees(trees []string) int {
 			currentTree, _ := strconv.Atoi(string(trees[row][col]))
 			if currentTree > tallestTree {
 				tallestTree = currentTree
+				visibleTrees2++
 				//????????????
 				visibleTrees[strconv.Itoa(row)+" "+strconv.Itoa(col)] = struct{}{}
 			}
@@ -55,6 +58,7 @@ func calculateVisibleTrees(trees []string) int {
 			currentTree, _ := strconv.Atoi(string(trees[row][col]))
 			if currentTree > tallestTree {
 				tallestTree = currentTree
+				visibleTrees2++
 				//??????????
 				visibleTrees[strconv.Itoa(row)+" "+strconv.Itoa(col)] = struct{}{}
 			}
@@ -66,12 +70,14 @@ func calculateVisibleTrees(trees []string) int {
 			currentTree, _ := strconv.Atoi(string(trees[row][col]))
 			if currentTree > tallestTree {
 				tallestTree = currentTree
+				visibleTrees2++
 				//???????????
 				visibleTrees[strconv.Itoa(row)+" "+strconv.Itoa(col)] = struct{}{}
 			}
 		}
 	}
-	fmt.Println(visibleTrees)
+	visibleTrees2 = visibleTrees2 - 4
+	fmt.Println(visibleTrees2)
 	//????????
 	return (len(trees) * 2) + (len(trees[0]) * 2) + len(visibleTrees) - 4
 }
