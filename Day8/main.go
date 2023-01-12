@@ -10,7 +10,7 @@ import (
 func main() {
 	//Liefert aus dem Input File den Inhalt als []byte
 	input, _ := os.ReadFile("/Users/sinah/Code/AdventOfCode2022/Day8/input.txt")
-	//Input an neuen Zeilen splitten
+	//Input an Zeilenumbrüchen splitten
 	trees := strings.Fields(string(input))
 
 	fmt.Println(calculateVisibleTrees(trees))
@@ -71,7 +71,7 @@ func calculateVisibleTrees(trees []string) int {
 			}
 		}
 	}
-
+	fmt.Println(visibleTrees)
 	//????????
 	return (len(trees) * 2) + (len(trees[0]) * 2) + len(visibleTrees) - 4
 }
@@ -86,7 +86,6 @@ func calcBestScenicScore(trees []string) int {
 			}
 		}
 	}
-
 	return bestScore
 }
 
