@@ -21,10 +21,11 @@ func calculateVisibleTrees(trees []string) int {
 
 	//??????????
 	visibleTrees := map[string]struct{}{}
-	visibleTrees2 := (len(trees) * 2) + (len(trees[0]) * 2)
+	visibleTrees2 := 0
 
 	for row := 1; row < len(trees)-1; row++ {
 
+		visibleTrees2++
 		// Links nach Rechts
 		tallestTree, _ := strconv.Atoi(string(trees[row][0]))
 		for col := 1; col < len(trees[row])-1; col++ {
@@ -52,6 +53,7 @@ func calculateVisibleTrees(trees []string) int {
 
 	for col := 1; col < len(trees)-1; col++ {
 
+		visibleTrees2++
 		// Oben nach Unten
 		tallestTree, _ := strconv.Atoi(string(trees[0][col]))
 		for row := 1; row < len(trees)-1; row++ {
@@ -76,9 +78,11 @@ func calculateVisibleTrees(trees []string) int {
 			}
 		}
 	}
+
 	visibleTrees2 = visibleTrees2 - 4
 	fmt.Println(visibleTrees2)
-	//????????
+
+	//Einmal alle Bäume die am Rand auf jeden Fall sichtbar sind und die 4 Ecken werden abgezogen
 	return (len(trees) * 2) + (len(trees[0]) * 2) + len(visibleTrees) - 4
 }
 
